@@ -4,7 +4,7 @@ import router from '@/router'
 import { User, Lock } from '@element-plus/icons-vue'
 import { ref } from 'vue'
 import {useUserStore} from '@/stores/index'
-const isRegister = ref(true)
+const isRegister = ref(false)
 const formModel = ref({
   username: '',
   password: '',

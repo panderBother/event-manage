@@ -12,10 +12,17 @@ export const useUserStore = defineStore('user', () => {
   const removeToken = () => {
     token.value = ''
   }
+  // 将用户信息存储在Pinia的store中
+  const userInfo = ref({})
+  const setUserInfo = (info) => {
+    userInfo.value = info
+  }
   return {
     token,
     setToken,
-    removeToken
+    removeToken,
+    userInfo,
+    setUserInfo
   }
 },
   {

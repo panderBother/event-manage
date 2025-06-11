@@ -12,3 +12,7 @@ export const userLoginService = ({username, password}) => {
     password
   })
 }
+// 获取用户信息
+export const userInfoService = () => {
+  return request.get('/my/userinfo')
+}
