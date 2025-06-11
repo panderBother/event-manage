@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { Edit, Delete } from '@element-plus/icons-vue'
-import { artGetListService } from '@/api/article'
+import { artArticleDelService, artGetListService } from '@/api/article'
 import { formatTime } from '@/utils/format'
 const loading = ref(false)
 const fromData = ref([])
@@ -12,6 +12,10 @@ const params = ref({
   state: ''
 })
 const total = ref(0)
+const articleEditRef=ref()
+const onArticle = () => {
+  articleEditRef.value.open({})
+}
 const getArticleList = async () => {
   loading.value = true
   try {
@@ -26,12 +30,19 @@ const getArticleList = async () => {
 }
 getArticleList()
 const handleEdit = (row) => {
+  articleEditRef.value.open(row)
   console.log('编辑行数据:', row)
-  // 在这里可以打开编辑对话框或执行其他操作
 }
-const handleDelete = (row) => {
+const handleDelete = async (row) => {
   console.log('删除行数据:', row)
-  // 在这里可以执行删除操作
+   await ElMessageBox.confirm('你确认删除该文章信息吗？', '温馨提示', {
+    type: 'warning',
+    confirmButtonText: '确认',
+    cancelButtonText: '取消'
+  })
+  await artArticleDelService(row.id)
+  ElMessage({ type: 'success', message: '删除成功' })
+  getArticleList()
 }
 const onSizeChange = (size) => {
   params.value.pagenum = 1
@@ -42,12 +53,20 @@ const onCurrentChange = (page) => {
   params.value.pagenum = page
   getArticleList()
 }
+// 添加修改成功
+const onSuccess = (type) => {
+  if (type === 'add') {
+    // 如果是添加，需要跳转渲染最后一页，编辑直接渲染当前页
+    const lastPage = Math.ceil((total.value + 1) / params.value.pagesize)
+    params.value.pagenum = lastPage
+  }
+  getArticleList()
+}
 </script>
-
 <template>
 <article-container title="文章管理">
   <template #extra>
-    <el-button type="primary">发布文章</el-button>
+    <el-button @click="onArticle" type="primary">发布文章</el-button>
   </template>
   <el-form style="width: 100%" :inline="true"  class="demo-form-inline">
     <el-form-item width="200" label="文章分类" >
@@ -115,6 +134,7 @@ const onCurrentChange = (page) => {
   @current-change="onCurrentChange"
   style="margin-top: 20px; justify-content: flex-end"
 />
+<article-edit ref="articleEditRef" @success="onSuccess"></article-edit>
 </article-container>
 
 </template>

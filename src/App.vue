@@ -7,9 +7,6 @@ import zh from 'element-plus/es/locale/lang/zh-cn.mjs'
   <el-config-provider :locale="zh">
     <router-view />
   </el-config-provider>
-<div> 
-  <router-view></router-view>
-</div>
 </template>
 
 <style scoped>
