@@ -15,7 +15,7 @@ import { userInfoService } from '@/api/user'
 import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 const userStore = useUserStore()
-const router=useRouter
+const router=useRouter()
 onMounted(async () => {
   // 获取用户信息
   const res = await userInfoService()
